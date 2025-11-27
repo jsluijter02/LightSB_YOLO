@@ -1,0 +1,6 @@
+[submodule "models/YOLOPX"]
+	path = models/YOLOPX
+	url = https://github.com/jiaoZ7688/YOLOPX
+[submodule "models/LightSB"]
+	path = models/LightSB
+	url = https://github.com/ngushchin/LightSB
