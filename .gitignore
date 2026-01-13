@@ -214,3 +214,4 @@ runs/
 weights/
 *.pth
 *.pyc
+notebooks/checkpoints/
