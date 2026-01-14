@@ -209,7 +209,6 @@ __marimo__/
 # custom
 .DS_Store
 data/
-dataset/
 runs/
 weights/
 *.pth
