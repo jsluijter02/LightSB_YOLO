@@ -214,3 +214,4 @@ weights/
 *.pth
 *.pyc
 notebooks/checkpoints/
+__pycache__/
