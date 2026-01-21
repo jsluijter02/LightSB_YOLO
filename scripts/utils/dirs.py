@@ -3,7 +3,6 @@ import os, sys
 def get_base_dir():
     BASE_DIR = os.getcwd()
     while os.path.basename(BASE_DIR) != "LightSB_YOLO":
-        print(BASE_DIR)
         BASE_DIR = os.path.dirname(BASE_DIR)
     return BASE_DIR
 

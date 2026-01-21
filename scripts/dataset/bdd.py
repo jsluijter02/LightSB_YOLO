@@ -2,10 +2,11 @@
 # Make sure to pass skip = true to YOLOPX BddDataset class
 import os
 import pickle as pkl
-import copy
 
+import scripts.utils.dirs as dirs
 from scripts.utils.dirs import get_base_dir
 
+dirs.add_YOLOPX_to_PATH()
 import models.YOLOPX.lib.dataset as dataset
 
 def pickle_path(is_train=False):
@@ -33,8 +34,7 @@ def generate_bdd_db_pickles(cfg, is_train=True):
             pkl.dump(data.db, f)
 
 # Fetches the dataset.db object of either the train or val data, depending on is_train
-def load_bdd_db(cfg, is_train=True):
-    generate_bdd_db_pickles(cfg=cfg, is_train=is_train)
+def load_db(is_train=True):
     with open(pickle_path(is_train), 'rb') as f:
         db = pkl.load(f)
     return db
@@ -50,7 +50,7 @@ def get_bdd_dataset(cfg, is_train=True, skip=True, transform=None):
     )
 
     if skip:
-        data.db = load_bdd_db(cfg, is_train=is_train)
+        data.db = load_db(is_train=is_train)
 
     return data
 
