@@ -61,10 +61,16 @@ class AutoencoderKL_BDD:
         os.makedirs(os.path.dirname(encodings_path), exist_ok=True)
         np.savez_compressed(encodings_path, latents=latents_array, filenames=np.asarray(filenames_array))
 
+    def load_latents(self, npz_filepath):
+        data = np.load(npz_filepath, allow_pickle=True)
+        return data["latents"], data["filenames"].tolist()
+
     def decode_latents(self, latents, batch_size):
         latents = torch.as_tensor(latents, device=get_device())
+        print("latents shape: ", latents.shape)
         num_instances = latents.shape[0]
         latents = latents.reshape([num_instances, 4, 32, 32]) # back to autoencoderkl shape
+        print("reshaped latents shape: ", latents.shape)
 
         # batch
         latents_batches = torch.split(latents, batch_size)
@@ -76,6 +82,7 @@ class AutoencoderKL_BDD:
             decoded_latents.append(decoded)
         
         decoded_latents = torch.concat(decoded_latents)
+        print("decoded latents shape: ", decoded_latents.shape)
         return decoded_latents
 
     def save_imgs(self, decoded_latents, filenames):

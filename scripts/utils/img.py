@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 def sample_indices(length, how_many=5):
-    return np.random.choice(length, how_many)
+    return np.random.choice(length, how_many, replace=False)
 
 def load_imgs(img_dir, filenames):
     out = []
