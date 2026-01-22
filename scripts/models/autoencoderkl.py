@@ -39,7 +39,7 @@ class AutoencoderKL_BDD:
         loader = DataLoader(dataset, batch_size=8, num_workers=4, persistent_workers=True)
         
         filenames_array = []
-        with torch.no_grad():
+        with torch.inference_mode():
             for batch, filenames in tqdm(loader):
                 batch = batch.to(self.device)
 
