@@ -111,7 +111,7 @@ class YOLOPX_BDD(YOLO_BDD):
         da_segment_results,ll_segment_results,detect_results, total_loss, maps, times = validate(
             epoch, self.config, valid_loader, validation_set, self.model, self.criterion,
             self.final_output_dir, self.tb_log_dir, self.writer_dict,
-            self.logger, self.device
+            self.logger, self.device, save_error_plots = True ## ADDED
         )
 
         fi = fitness(np.array(detect_results).reshape(1, -1))

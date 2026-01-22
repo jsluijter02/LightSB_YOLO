@@ -15,8 +15,8 @@ from scripts.utils.device import get_device
 class AutoencoderKL_BDD:
     def __init__(self, url="https://huggingface.co/stabilityai/sd-vae-ft-mse-original/blob/main/vae-ft-mse-840000-ema-pruned.safetensors"):
         # source: https://huggingface.co/docs/diffusers/api/models/autoencoderkl
-        self.model = AutoencoderKL.from_single_file(url)
-        self.model = self.model.to(get_device())
+        self.device = get_device()
+        self.model = AutoencoderKL.from_single_file(url).to(self.device)
 
         # no training, so set to eval mode
         self.model.eval()
@@ -39,10 +39,9 @@ class AutoencoderKL_BDD:
         loader = DataLoader(dataset, batch_size=8, num_workers=4, persistent_workers=True)
         
         filenames_array = []
-        device = get_device()
         with torch.no_grad():
             for batch, filenames in tqdm(loader):
-                batch = batch.to(device)
+                batch = batch.to(self.device)
 
                 enc = self.model.encode(batch)
                 enc_latent = enc.latent_dist.sample().detach()
@@ -66,7 +65,7 @@ class AutoencoderKL_BDD:
         return data["latents"], data["filenames"].tolist()
 
     def decode_latents(self, latents, batch_size):
-        latents = torch.as_tensor(latents, device=get_device())
+        latents = torch.as_tensor(latents, device=self.device)
         print("latents shape: ", latents.shape)
         num_instances = latents.shape[0]
         latents = latents.reshape([num_instances, 4, 32, 32]) # back to autoencoderkl shape
