@@ -29,8 +29,8 @@ class YOLO_BDD(ABC):
         super().__init__()
         self.config = cfg
 
-    def set_lightsb_images(self):
-        self.config.DATASET.DATAROOT = os.path.join(dirs.get_data_dir(), "lightsb_images")
+    def set_image_path(self, path):
+        self.config.DATASET.DATAROOT = os.path.join(dirs.get_data_dir(), path)
 
     @abstractmethod
     def validate(self, SB:bool= False):
@@ -108,11 +108,12 @@ class YOLOPX_BDD(YOLO_BDD):
         )
 
         epoch = 0
-        da_segment_results,ll_segment_results,detect_results, total_loss, maps, times = validate(
-            epoch, self.config, valid_loader, validation_set, self.model, self.criterion,
-            self.final_output_dir, self.tb_log_dir, self.writer_dict,
-            self.logger, self.device, save_error_plots = True ## ADDED
-        )
+        with torch.inference_mode():
+            da_segment_results,ll_segment_results,detect_results, total_loss, maps, times = validate(
+                epoch, self.config, valid_loader, validation_set, self.model, self.criterion,
+                self.final_output_dir, self.tb_log_dir, self.writer_dict,
+                self.logger, self.device, save_error_plots = True ## ADDED
+            )
 
         fi = fitness(np.array(detect_results).reshape(1, -1))
         msg =   'Test:    Loss({loss:.3f})\n' \
