@@ -14,14 +14,25 @@ def load_imgs(img_dir, filenames):
         out.append(img)
     return out
 
-def plot_samples(images, title=""):
+def plot_samples(images, title="", labels=None, square=True):
     length = len(images)
 
-    plt.figure(figsize=(3*length, 2))
+    if labels != None:
+        assert(len(images) == len(labels))
+
+    if square:
+        size = (3*length, 4)
+    else:
+        size = (4*length, 3) 
+
+    plt.figure(figsize=size)
     for i, image in enumerate(images):
-        plt.subplot(1,length,i+1)
-        plt.imshow(image)
-        plt.axis('off')
+        ax = plt.subplot(1,length,i+1)
+        ax.imshow(image)
+        ax.axis('off')
+        if labels != None:
+            ax.set_title(labels[i]) 
     
     plt.suptitle(title)
+    plt.tight_layout()
     plt.show()

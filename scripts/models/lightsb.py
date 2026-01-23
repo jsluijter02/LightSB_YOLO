@@ -51,7 +51,7 @@ class LightSB_BDD:
             self.optimizer.step() 
 
     def transform(self, samples):
-        with torch.no_grad():
+        with torch.inference_mode():
             transformed = self.model(samples)
             return transformed
     
