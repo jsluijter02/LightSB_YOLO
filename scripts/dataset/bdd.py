@@ -64,4 +64,6 @@ def remap_imgpath_db(db, new_root):
         base = os.path.basename(img_path)
         new_path = os.path.join(new_root, base)
         img['image'] = new_path
+
+    print("New image path: ", db[0]['image'])
     return db
