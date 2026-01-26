@@ -91,8 +91,11 @@ class YOLOPX_BDD(YOLO_BDD):
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])
+
         validation_set = bdd.get_bdd_dataset(self.config, is_train=False, skip=True, transform=transf)
         validation_set.db = bdd.get_db(self.config, False, timeofday)
+
+        # validation_set.db = bdd.remap_imgpath_db(validation_set.db, self.config.DATASET.DATAROOT)
 
         msg = f'Num validation "{timeofday}" images: {len(validation_set.db)}'
         self.logger.info(msg)
@@ -108,7 +111,7 @@ class YOLOPX_BDD(YOLO_BDD):
         )
 
         epoch = 0
-        with torch.inference_mode():
+        with torch.no_grad():
             da_segment_results,ll_segment_results,detect_results, total_loss, maps, times = validate(
                 epoch, self.config, valid_loader, validation_set, self.model, self.criterion,
                 self.final_output_dir, self.tb_log_dir, self.writer_dict,

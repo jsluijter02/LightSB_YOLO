@@ -22,16 +22,15 @@ def pickle_path(is_train=False):
 
 # generates the pickled dataset.db files of either train or val, depending on is_train
 def generate_bdd_db_pickles(cfg, is_train=True):
-    if os.path.exists(pickle_path(is_train=is_train)) == False:
-        data = dataset.BddDataset(
-            cfg=cfg,
-            is_train=is_train, 
-            inputsize=cfg.MODEL.IMAGE_SIZE,
-            transform=None, 
-            skip=False
-        )
-        with open(pickle_path(is_train), 'wb') as f:
-            pkl.dump(data.db, f)
+    data = dataset.BddDataset(
+        cfg=cfg,
+        is_train=is_train, 
+        inputsize=cfg.MODEL.IMAGE_SIZE,
+        transform=None, 
+        skip=False
+    )
+    with open(pickle_path(is_train), 'wb') as f:
+        pkl.dump(data.db, f)
 
 # Fetches the dataset.db object of either the train or val data, depending on is_train
 def load_db(is_train=True):
