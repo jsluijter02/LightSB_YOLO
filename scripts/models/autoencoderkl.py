@@ -84,9 +84,10 @@ class AutoencoderKL_BDD:
         print("decoded latents shape: ", decoded_latents.shape)
         return decoded_latents
 
-    def save_imgs(self, decoded_latents, filenames):
+    ##
+    def save_imgs(self, decoded_latents, filenames, folder_name):
         data = dirs.get_data_dir()
-        save_path = os.path.join(data, "LightSB_images")
+        save_path = os.path.join(data, folder_name)
         os.makedirs(save_path, exist_ok=True)
 
         for latent, filename in zip(decoded_latents, filenames):

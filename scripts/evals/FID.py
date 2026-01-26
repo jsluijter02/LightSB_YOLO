@@ -25,3 +25,8 @@ def latent_FID_score(list1: Tensor, list2: Tensor):
 
     fid = ssdiff + trace(sigma1 + sigma2 - 2.0 * covmean)
     return fid
+
+# https://medium.com/@heyamit10/pytorch-implementation-of-common-gan-metrics-86f993f6e737
+# FID metric for images
+def image_FID_score():
+    pass
