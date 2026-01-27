@@ -75,7 +75,7 @@ class AutoencoderKL_BDD:
         latents_batches = torch.split(latents, batch_size)
 
         decoded_latents = []
-        for latent in latents_batches:
+        for latent in tqdm(latents_batches):
             decoded = self.model.decode(latent)
             decoded = decoded.sample.detach()
             decoded_latents.append(decoded)
@@ -85,14 +85,13 @@ class AutoencoderKL_BDD:
         return decoded_latents
 
     ##
-    def save_imgs(self, decoded_latents, filenames, folder_name):
+    def save_imgs(self, decoded_imgs, filenames, folder_name):
         data = dirs.get_data_dir()
         save_path = os.path.join(data, folder_name)
         os.makedirs(save_path, exist_ok=True)
-
-        for latent, filename in zip(decoded_latents, filenames):
-            save_image(latent, filename)
-
+        decoded_imgs = diffusers.utils.pt_to_pil(decoded_imgs)
+        for img, filename in tqdm(zip(decoded_imgs, filenames)):
+            img.save(os.path.join(save_path, os.path.basename(filename)))
 
 # Takes the runtime from 3hrs to 25mins
 class customDataset(Dataset):
