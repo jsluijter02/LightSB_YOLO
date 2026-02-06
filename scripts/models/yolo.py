@@ -101,14 +101,7 @@ class YOLOPX_BDD(YOLO_BDD):
         self.logger.info(msg)
 
         # dataset loader
-        valid_loader = DataLoaderX(
-            validation_set,
-            batch_size=self.config.TEST.BATCH_SIZE_PER_GPU * len(self.config.GPUS),
-            shuffle=False,
-            num_workers=self.config.WORKERS,
-            pin_memory=False,
-            collate_fn=dataset.AutoDriveDataset.collate_fn
-        )
+        valid_loader = self.get_dataloader(validation_set)
 
         epoch = 0
         with torch.inference_mode():
@@ -143,6 +136,16 @@ class YOLOPX_BDD(YOLO_BDD):
             self.weights = args.WEIGHTS
         if hasattr(args, "IMAGES"):
             self.config.DATASET.DATAROOT = args.IMAGES
+
+    def get_dataloader(self, set):
+        return DataLoaderX(
+            set,
+            batch_size=self.config.TEST.BATCH_SIZE_PER_GPU * len(self.config.GPUS),
+            shuffle=False,
+            num_workers=self.config.WORKERS,
+            pin_memory=False,
+            collate_fn=dataset.AutoDriveDataset.collate_fn
+        )
 
 class YOLOv12n_BDD(YOLO_BDD):
     def __init__(self, db, img_path, annt_path, model):

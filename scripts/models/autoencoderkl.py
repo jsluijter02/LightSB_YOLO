@@ -85,12 +85,13 @@ class AutoencoderKL_BDD:
         return decoded_latents
 
     ##
-    def save_imgs(self, decoded_imgs, filenames, folder_name):
+    def save_imgs(self, decoded_imgs, filenames, folder_name, split="train"):
         data = dirs.get_data_dir()
-        save_path = os.path.join(data, folder_name)
+        save_path = os.path.join(data, folder_name, split)
         os.makedirs(save_path, exist_ok=True)
         decoded_imgs = diffusers.utils.pt_to_pil(decoded_imgs)
         for img, filename in tqdm(zip(decoded_imgs, filenames)):
+            img = img.resize((1280,720), resample=Image.BICUBIC)
             img.save(os.path.join(save_path, os.path.basename(filename)))
 
 # Takes the runtime from 3hrs to 25mins
