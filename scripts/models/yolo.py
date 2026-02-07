@@ -146,6 +146,10 @@ class YOLOPX_BDD(YOLO_BDD):
             pin_memory=False,
             collate_fn=dataset.AutoDriveDataset.collate_fn
         )
+    
+    @staticmethod
+    def standard_config():
+        return cfg
 
 class YOLOv12n_BDD(YOLO_BDD):
     def __init__(self, db, img_path, annt_path, model):

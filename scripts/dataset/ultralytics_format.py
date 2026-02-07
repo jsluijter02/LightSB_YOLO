@@ -3,8 +3,6 @@ import os
 import yaml
 from tqdm import tqdm
 
-from scripts.utils import dirs
-
 def export_to_ultralytics_format(db, save_dir):
     # only labels, because the images are already in bdd folder / lightsb folder / clahe folder
     os.makedirs(save_dir, exist_ok=True)
