@@ -14,7 +14,7 @@ def load_imgs(img_dir, filenames):
         out.append(img)
     return out
 
-def plot_samples(images, title="", labels=None, square=True):
+def plot_samples(images, title="", labels=None, square=True, save_dir:str = None):
     length = len(images)
 
     if labels != None:
@@ -35,4 +35,6 @@ def plot_samples(images, title="", labels=None, square=True):
     
     plt.suptitle(title)
     plt.tight_layout()
+    if save_dir:
+        plt.savefig(save_dir)
     plt.show()

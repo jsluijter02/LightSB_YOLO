@@ -28,7 +28,8 @@ class AutoencoderKL_BDD:
 
         transf = transforms.Compose(
             [
-                transforms.Resize((256,256)),
+                # 256x144 keeps aspect ratio
+                transforms.Resize((144,256), interpolation=transforms.InterpolationMode.LANCZOS, antialias=True),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=(0.5,0.5,0.5), std=(0.5,0.5,0.5)) # model expects inputs in range [-1, 1], otherwise the image looks white
             ]
@@ -36,7 +37,7 @@ class AutoencoderKL_BDD:
         
         dataset = customDataset(db, transf)
 
-        loader = DataLoader(dataset, batch_size=8, num_workers=4, persistent_workers=True)
+        loader = DataLoader(dataset, batch_size=32, num_workers=0,persistent_workers=False)
         
         filenames_array = []
         with torch.inference_mode():
@@ -44,7 +45,7 @@ class AutoencoderKL_BDD:
                 batch = batch.to(self.device)
 
                 enc = self.model.encode(batch)
-                enc_latent = enc.latent_dist.sample().detach()
+                enc_latent = enc.latent_dist.mode().detach()
 
                 enc_latent = enc_latent.flatten(start_dim=1)
                 enc_latent = enc_latent.cpu().numpy()
@@ -64,11 +65,13 @@ class AutoencoderKL_BDD:
         data = np.load(npz_filepath, allow_pickle=True)
         return data["latents"], data["filenames"].tolist()
 
-    def decode_latents(self, latents, batch_size):
+    def decode_latents(self, latents, batch_size=8, resize_shape=[]):
         latents = torch.as_tensor(latents, device=self.device)
         print("latents shape: ", latents.shape)
         num_instances = latents.shape[0]
-        latents = latents.reshape([num_instances, 4, 32, 32]) # back to autoencoderkl shape
+        if resize_shape == []:
+            resize_shape = [num_instances, 4, 18, 32]
+        latents = latents.reshape(resize_shape) # back to autoencoderkl shape
         print("reshaped latents shape: ", latents.shape)
 
         # batch
@@ -91,7 +94,7 @@ class AutoencoderKL_BDD:
         os.makedirs(save_path, exist_ok=True)
         decoded_imgs = diffusers.utils.pt_to_pil(decoded_imgs)
         for img, filename in tqdm(zip(decoded_imgs, filenames)):
-            img = img.resize((1280,720), resample=Image.BICUBIC)
+            img = img.resize((1280,720), resample=Image.LANCZOS)
             img.save(os.path.join(save_path, os.path.basename(filename)))
 
 # Takes the runtime from 3hrs to 25mins

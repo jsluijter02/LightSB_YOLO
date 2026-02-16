@@ -215,3 +215,4 @@ weights/
 *.pyc
 notebooks/checkpoints/
 __pycache__/
+data.zip

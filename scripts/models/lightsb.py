@@ -54,47 +54,42 @@ class LightSB_BDD:
         with torch.no_grad():
             transformed = self.model(samples)
             return transformed
+        
+    def load_state_dict(self, state_dict):
+        self.model.load_state_dict(state_dict)
     
-    def update_config(self, args: argparse.Namespace):
-        self.config.defrost()
+    ## Config stuff
+    @staticmethod
+    def update_config(args: argparse.Namespace, config=None):
+        if config is None:
+            config = LightSB_BDD.standard_config()
+        config.defrost()
         if hasattr(args, "DIM"):
-            self.config.DIM = args.DIM
+            config.DIM = args.DIM
         
         # model param changes
         if hasattr(args, "BATCH_SIZE"):
-            self.config.MODEL.BATCH_SIZE = args.BATCH_SIZE
+            config.MODEL.BATCH_SIZE = args.BATCH_SIZE
         if hasattr(args,"EPSILON"):
-            self.config.MODEL.EPSILON = args.EPSILON
+            config.MODEL.EPSILON = args.EPSILON
         if hasattr(args,"D_LR"):
-            self.config.MODEL.D_LR = args.D_LR
+            config.MODEL.D_LR = args.D_LR
         if hasattr(args, "N_POTENTIALS"):
-            self.config.MODEL.N_POTENTIALS = args.N_POTENTIALS
+            config.MODEL.N_POTENTIALS = args.N_POTENTIALS
         if hasattr(args, "IS_DIAGONAL"):
-            self.config.MODEL.IS_DIAGONAL = args.IS_DIAGONAL
+            config.MODEL.IS_DIAGONAL = args.IS_DIAGONAL
         
         # max steps
         if hasattr(args, "MAX_STEPS"):
-            self.config.MAX_STEPS = args.MAX_STEPS
-
-        self.config.freeze()
-
-    # after updating the config, you can reload the model with this function
-    def reload_model(self):
-        self.model = LightSB(dim=self.config.DIM,
-                             n_potentials=self.config.MODEL.N_POTENTIALS,
-                             epsilon=self.config.MODEL.EPSILON,
-                             sampling_batch_size = self.config.MODEL.SAMPLING_BATCH_SIZE,
-                             S_diagonal_init=0.1,
-                             is_diagonal=self.config.MODEL.IS_DIAGONAL).to(get_device())
-    
-    def load_state_dict(self, state_dict):
-        self.model.load_state_dict(state_dict)
+            config.MAX_STEPS = args.MAX_STEPS   
+        config.freeze()
+        return config
 
     ### Static get config methsods
     @staticmethod
     def standard_config():
         _C = CN()
-        _C.DIM = 4096
+        _C.DIM = 2304
         _C.INPUT_DATA = "night"
         _C.TARGET_DATA = "daytime"
 
@@ -118,6 +113,3 @@ class LightSB_BDD:
         _C.OUTPUT_PATH = '../checkpoints/{}'.format(_C.EXP_NAME)
 
         return _C
-      
-    
-## eval
