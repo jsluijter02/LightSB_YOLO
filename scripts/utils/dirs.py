@@ -31,6 +31,3 @@ def add_LIGHTSB_to_PATH():
     base = get_base_dir()
     LIGHTSB_DIR = os.path.join(base, "models", "LightSB")
     sys.path.append(LIGHTSB_DIR)
-
-if __name__ == "__main__":
-    print(get_base_dir())

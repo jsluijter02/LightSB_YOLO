@@ -17,7 +17,7 @@ def load_imgs(img_dir, filenames):
 def plot_samples(images, title="", labels=None, square=True, save_dir:str = None):
     length = len(images)
 
-    if labels != None:
+    if labels is not None:
         assert(len(images) == len(labels))
 
     if square:
@@ -30,7 +30,7 @@ def plot_samples(images, title="", labels=None, square=True, save_dir:str = None
         ax = plt.subplot(1,length,i+1)
         ax.imshow(image)
         ax.axis('off')
-        if labels != None:
+        if labels is not None:
             ax.set_title(labels[i]) 
     
     plt.suptitle(title)

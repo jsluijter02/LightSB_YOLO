@@ -6,6 +6,10 @@ from PIL import Image
 from scripts.utils import dirs
 from models.YOLOPX.lib.core.general import plot_one_box, xywh2xyxy, plot_images
 
+def jpg_to_txt(img_name):
+    base = os.path.splitext(img_name)[0]
+    return f'{base}.txt'
+
 def get_labels(label_path):
     labels = []
     with open(label_path, 'r') as f:
