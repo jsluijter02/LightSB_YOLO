@@ -216,3 +216,6 @@ weights/
 notebooks/checkpoints/
 __pycache__/
 data.zip
+olddata/
+results/
+results.zip
