@@ -46,7 +46,7 @@ def plot_bounding_boxes(image_path, label_path, conf_threshold=0.5, color=(255,0
     
     return image
 
-def plot_prediction_gt_boxes(image_path, pred_label_path, split="val", conf_threshold=0.5):
+def plot_prediction_gt_boxes(image_path, pred_label_path, split="val", conf_threshold=0.25):
     pred_image = plot_bounding_boxes(image_path, pred_label_path, conf_threshold=conf_threshold, color=(0,255,0))
 
     gt_image_path = os.path.join(dirs.get_data_dir(), "images", split, os.path.basename(image_path))
